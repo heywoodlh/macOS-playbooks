@@ -4,3 +4,8 @@
   roles:
   - elliotweiser.osx-command-line-tools
   - geerlingguy.homebrew
+  - bluetooth                
+  - permissions
+  - users
+  - logging
+  - services
