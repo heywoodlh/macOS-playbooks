@@ -1,0 +1,40 @@
+---
+- name: configure /etc/security/audit_control to generate audit records when successful/unsuccessful attempts to access/modify privileges occur
+  shell: sed -i.bak '/^flags/ s/$/,lo/' /etc/security/audit_control
+  become: true
+
+- name: configure /etc/security/audit_control to generate audit records for all account creations, modifications, disabling, and termination events; privileged activities or other system-level access; all kernel module load, unload, and restart actions; all program initiations; and organizationally defined events for all non-local maintenance and diagnostic sessions
+  shell: /usr/bin/sed -i.bak '/^flags/ s/$/,ad/' /etc/security/audit_control
+  become: true
+
+- name: generate audit records for DoD-defined events such as successful/unsuccessful logon attempts, successful/unsuccessful direct access attempts, starting and ending time for user access, and concurrent logons to the same account from different sources
+  shell: /usr/bin/sed -i.bak '/^flags/ s/$/,aa/' /etc/security/audit_control
+  become: true
+
+- name: audit the enforcement actions used to restrict access associated with changes to the system
+  shell: /usr/bin/sed -i.bak '/^flags/ s/$/,fm,-fr,-fw/' /etc/security/audit_control
+  become: true
+
+- name: allocate audit record storage capacity to store at least one weeks worth of audit records
+  shell: /usr/bin/sed -i.bak 's/.*expire-after.*/expire-after:7d/' /etc/security/audit_control
+  become: true
+
+- name: provide an immediate warning when allocated audit record storage volume reaches 75 percent of maximum audit record storage capacity
+  shell: /usr/bin/sed -i.bak 's/.*minfree.*/minfree:25/' /etc/security/audit_control
+  become: true
+
+- name: make auditd log errors to standard error as well as syslogd
+  shell: /usr/bin/sed -i.bak 's/logger -p/logger -s -p/' /etc/security/audit_warn
+  become: true
+
+- name: resynchronize audit system
+  shell: /usr/sbin/audit -s
+  become: true
+
+- name: enable audit system service
+  shell: /bin/launchctl load -w /System/Library/LaunchDaemons/com.apple.auditd.plist
+  become: true
+
+- name: enable firewall logging
+  shell: /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
+  become: true 

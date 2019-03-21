@@ -1,0 +1,6 @@
+---
+- hosts: all
+  become: true
+  roles:
+  - elliotweiser.osx-command-line-tools
+  - geerlingguy.homebrew

@@ -1,0 +1,4 @@
+---
+- name: set sticky bit on all world writeable directories
+  shell: /usr/bin/find / -type d \( -perm -0002 -a ! -perm -1000 \) -exec chmod +t {} \; 
+  become: true

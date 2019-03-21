@@ -1,0 +1,43 @@
+# comment out the line below if you do not want to run this hardening playbook against the local machine
+localhost ansible_connection=local ansible_python_interpreter="/usr/bin/env python"
+
+
+# uncomment the following lower lines and replace 'remote.host.[1-2]' with the hostnames of your machines
+#[all]
+#remote.host.1
+#remote.host.2
+
+
+
+# set the variables below with desired values
+[all:vars]
+
+disable_smb_filesharing='False'
+disable_afp_filesharing='False'
+disable_nfs_filesharing='False'
+
+disable_wifi='False'
+disable_bluetooth='False'
+disable_ir='False'
+disable_bonjour='False'
+disable_uucp='False'
+
+disable_location='True'
+
+disable_diagnostics_and_usage='True'
+
+# set 'disable_extra_services' to 'True' to disable facetime, messages, icloud calendar, reminders, address book, icloud mail, icloud notes, webcam, system preference pane for icloud, system preference pane for internet accounts, siri, find my mac, back to my mac, icloud keychain, icloud document sync, icloud bookmark sync, icloud photo library, icloud desktop
+disable_extra_services='False'
+
+# set 'harden_login_window' to 'True' conceal information on the lock screen, initiate a session lock after a 15-minute period of inactivity, retain the session lock until the user enters password, disable guest user, disable siri pop-ups, prohibit unattended or automatic logon to the system, logon window prompt for username and password rather than show users, disable prompt for apple id and icloud
+harden_login_window='False'
+
+enable_filevault='False'
+
+
+bluetooth_config_url='https://gist.githubusercontent.com/heywoodlh/44bc83e086da3ea9c4db1e9f15b78d74/raw/f9424af9d36ae8a6573f1c08c0aed90be2c41315/stig-disable-bluetooth.config'
+
+restrictions_config_url='https://gist.githubusercontent.com/heywoodlh/44bc83e086da3ea9c4db1e9f15b78d74/raw/cb24ab469af7d4472fdb15957fc09f0a1dd999a0/stig-restrictions.config'
+
+login_win_config_url='https://gist.githubusercontent.com/heywoodlh/44bc83e086da3ea9c4db1e9f15b78d74/raw/552485039a7c5f4c81611ba70b767855e9c12bd6/login-window.config'
+

@@ -1,0 +1,8 @@
+--- 
+- name: disable bluetooth wake
+  shell: /usr/bin/defaults write /Users/`whoami`/Library/Preferences/ByHost/com.apple.Bluetooth.`/usr/sbin/system_profiler SPHardwareDataType | /usr/bin/grep "Hardware UUID" | /usr/bin/cut -c22-57`.plist RemoteWakeEnabled 0 
+  when: disable_bluetooth == 'True'
+
+- name: disable bluetooth sharing
+  shell: /usr/bin/defaults write /Users/`whoami`/Library/Preferences/ByHost/com.apple.Bluetooth.`/usr/sbin/system_profiler SPHardwareDataType | /usr/bin/grep "Hardware UUID" | /usr/bin/cut -c22-57`.plist PrefKeyServicesEnabled 0
+  when: disable_bluetooth == 'True'

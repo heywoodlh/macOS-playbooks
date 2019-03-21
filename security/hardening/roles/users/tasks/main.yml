@@ -1,0 +1,7 @@
+---
+- name: configure sudoers to authenticate users on a per -tty basis
+  lineinfile:
+    path: /etc/sudoers
+    line: 'Defaults tty_tickets'
+    insertafter: EOF
+  become: true

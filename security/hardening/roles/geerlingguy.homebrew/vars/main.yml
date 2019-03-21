@@ -1,0 +1,28 @@
+---
+homebrew_install_path: /usr/local/homebrew
+homebrew_installed_packages:
+  - nmap
+  - masscan
+  - clamav
+  - coreutils
+  - lynis
+  - m-cli
+  - rkhunter
+
+homebrew_taps:
+  - caskroom/cask
+  - caskroom/versions
+ 
+homebrew_cask_appdir: /Applications
+homebrew_cask_apps:
+  - reikey
+  - knockknock
+  - lulu
+  - ransomwhere
+  - do-not-disturb
+  - oversight
+  - blockblock
+  - kextviewr
+  - taskexplorer
+  - whatsyoursign
+  - wireshark

@@ -1,0 +1,155 @@
+---
+- name: disable rshd
+  shell: /bin/launchctl disable system/com.apple.rshd
+  become: true
+
+- name: disable screensharing
+  shell: /bin/launchctl disable system/com.apple.screensharing
+  become: true
+
+- name: disable wifi
+  shell: /usr/sbin/networksetup -setnetworkserviceenabled "Wi-Fi" off
+  become: true
+  when: disable_wifi == 'True'
+
+- name: download bluetooth configuration profile
+  get_url:
+    url: "{{ bluetooth_config_url }}"
+    dest: /tmp/stig-disable-bluetooth.config
+  when: disable_bluetooth == 'True'
+
+- name: import bluetooth configuration profile
+  shell: /usr/bin/profiles -I -F /tmp/stig-disable-bluetooth.config
+  become: true
+  when: disable_bluetooth == 'True'
+
+- name: download restrictions configuration profile
+  get_url:
+    url: "{{ restrictions_config_url }}"
+    dest: /tmp/restrictions.config
+  when: disable_icloud_services == 'True'
+
+- name: disable facetime, messages, icloud calendar, reminders, address book, icloud mail, icloud notes, webcam, system preference pane for icloud, system preference pane for internet accounts, siri, find my mac, back to my mac, icloud keychain, icloud document sync, icloud bookmark sync, icloud photo library, icloud desktop
+  shell: /usr/bin/profiles -I -F /tmp/restrictions.config
+  become: true
+  when: disable_icloud_services == 'True'
+
+- name: download login window configuration profile
+  get_url:
+    url: "{{ login_win_config_url }}"
+    dest: /tmp/login-window.config
+  when: harden_login_window == 'True'
+
+- name: import login window configuration profile
+  shell: /usr/bin/profiles -I -F /tmp/login-window.config
+  become: true
+  when: harden_login_window == 'True'
+
+- name: disable diagnostic and analytics collections
+  shell: /usr/bin/defaults read "/Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist" AutoSubmit
+  become: true
+  when: disable_diagnostics_and_usage == 'True'
+
+- name: disable diagnostic and analytics collections
+  shell: /usr/bin/defaults write "/Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist" AutoSubmit -bool false 
+  become: true
+  when: disable_diagnostics_and_usage == 'True'
+
+- name: disable diagnostic and analytics collections
+  shell: /bin/chmod 644 /Library/Application\ Support/CrashReporter/DiagnosticMessagesHistory.plist
+  become: true
+  when: disable_diagnostics_and_usage == 'True'
+
+- name: disable diagnostic and analytics collections
+  shell: /usr/bin/chgrp admin /Library/Application\ Support/CrashReporter/DiagnosticMessagesHistory.plist
+  become: true
+  when: disable_diagnostics_and_usage == 'True'
+
+- name: disable location services
+  shell: /usr/bin/defaults write /private/var/db/locationd/Library/Preferences/ByHost/com.apple.locationd.`/usr/sbin/system_profiler SPHardwareDataType | /usr/bin/grep "Hardware UUID" | /usr/bin/cut -c22-57` LocationServicesEnabled -bool false
+  become: true
+  when: disable_location == 'True'
+
+- name: disable IR in the kernel
+  shell: /usr/bin/defaults write /Library/Preferences/com.apple.driver.AppleIRController DeviceEnabled -bool FALSE 
+  become: true
+  when: disable_ir == 'True'
+
+- name: disable SMB sharing service
+  shell: /bin/launchctl disable system/com.apple.smbd
+  become: true
+  when: disable_smb_filesharing == 'True'
+
+- name: disable Apple File (AFP) sharing service
+  shell: /bin/launchctl disable system/com.apple.AppleFileServer
+  become: true
+  when: disable_afp_filesharing == 'True'
+
+- name: disable NFS daemon
+  shell: /bin/launchctl disable system/com.apple.nfsd
+  become: true
+  when: disable_nfs_filesharing == 'True'
+
+- name: disable NFS lock daemon
+  shell: /bin/launchctl disable system/com.apple.lockd
+  become: true
+  when: disable_nfs_filesharing == 'True'
+
+- name: disable NFS stat daemon
+  shell: /bin/launchctl disable system/com.apple.statd.notify
+  become: true
+  when: disable_nfs_filesharing == 'True'
+
+- name: disable bonjour multicast
+  shell: /usr/bin/defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool true
+  become: true
+  when: disable_bonjour == 'True'
+
+- name: disable uucp
+  shell: /bin/launchctl disable system/com.apple.uucp
+  become: true
+  when: disable_uucp == 'True'
+
+- name: unload tftpd service
+  shell: /bin/launchctl unload -w /System/Library/LaunchDaemons/tftp.plist
+  become: true
+
+- name: disable telnet service
+  shell: /bin/launchctl disable system/com.apple.telnetd
+  become: true
+
+- name: disable ftp service
+  shell: /bin/launchctl disable system/com.apple.ftpd
+  become: true
+
+- name: disable remote apple events
+  shell: /bin/launchctl disable system/com.apple.AEServer
+  become: true
+
+- name: disable fingerd service
+  shell: /bin/launchctl disable system/com.apple.fingerd
+  become: true
+
+- name: disable network sharing
+  shell: /bin/launchctl disable system/com.apple.NetworkSharing
+  become: true
+
+- name: disable apache service
+  shell: /bin/launchctl disable system/org.apache.httpd
+  become: true
+
+- name: enable application firewall
+  shell: /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+  become: true
+
+- name: enable filevault
+  shell: /usr/bin/fdesetup enable
+  become: true
+
+- name: enable ntp service
+  shell: /bin/launchctl load -w /System/Library/LaunchDaemons/org.ntp.ntpd.plist
+  become: true
+
+- name: enable security assessment policy subsystem
+  shell: /usr/sbin/spctl --master-enable
+  become: true
