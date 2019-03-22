@@ -123,11 +123,11 @@
     loop: "{{ homebrew_cask_uninstalled_apps }}"
 
   - name: Correct ownership of /usr/local/Cellar
-      file:
-        path: /usr/local/Cellar
-        owner: "{{ homebrew_user }}"
-        group: "{{ homebrew_group }}"
-        recurse: yes
+    file:
+      path: /usr/local/Cellar
+      owner: "{{ homebrew_user }}"
+      group: "{{ homebrew_group }}"
+      recurse: yes
 
   - name: Install configured cask applications.
     homebrew_cask:
