@@ -122,12 +122,13 @@
     homebrew_cask: "name={{ item }} state=absent"
     loop: "{{ homebrew_cask_uninstalled_apps }}"
 
-  - name: Correct ownership of /usr/local/Cellar
+  - name: Ensure correct ownership of /usr/local/Cellar
     file:
       path: /usr/local/Cellar
       owner: "{{ homebrew_user }}"
       group: "{{ homebrew_group }}"
       recurse: yes
+    become: yes
 
   - name: Install configured cask applications.
     homebrew_cask:
